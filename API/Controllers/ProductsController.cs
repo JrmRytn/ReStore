@@ -6,7 +6,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(ILogger<ProductsController> logger, StoreContext context) : ControllerBase
+public class ProductsController(ILogger<ProductsController> logger, StoreContext context) : BaseApiController
 {
     private readonly StoreContext _context = context;
     private readonly ILogger<ProductsController> _logger = logger;
@@ -20,6 +20,9 @@ public class ProductsController(ILogger<ProductsController> logger, StoreContext
     [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     { 
-        return Ok(await _context.Products.FindAsync(id));
+        var product = await _context.Products.FindAsync(id);
+        if (product == null) return NotFound();
+
+        return Ok(product);
     }
 }
