@@ -6,6 +6,7 @@ namespace API.Data;
 public class StoreContext(DbContextOptions<StoreContext> options) : DbContext(options)
 {
     public DbSet<Product> Products { get; set; }
+    public DbSet<Basket> Baskets { get; set; } 
 }
 
 public static class DbInitializer
@@ -197,7 +198,7 @@ public static class DbInitializer
         };
 
         context.Products.AddRange(products);
-
+        
         context.SaveChanges();
     }
 }

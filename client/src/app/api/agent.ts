@@ -5,6 +5,7 @@ import { router } from "../router/Routes";
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
 axios.defaults.baseURL= 'http://localhost:5000/api';
+axios.defaults.withCredentials = true;
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -39,29 +40,35 @@ axios.interceptors.response.use(async response => {
     return Promise.reject(error.response);
 })
 
-const request = { 
+const requests = { 
     get: (url: string) => axios.get(url).then(responseBody),
     post: (url: string, body: object) => axios.post(url,body).then(responseBody),
     put: (url: string, body: object) => axios.get(url, body).then(responseBody),
-    delete: (url: string) => axios.get(url).then(responseBody),
+    delete: (url: string) => axios.delete(url).then(responseBody),
 
 }
 const Catalog = {
-    list: () => request.get('/products'),
-    details: (id: number) => request.get(`/products/${id}`)
+    list: () => requests.get('/products'),
+    details: (id: number) => requests.get(`/products/${id}`)
+}
+const Basket = {
+    get: () => requests.get('/basket'),
+    addItem: (productId: number, quantity = 1) => requests.post(`/basket?productId=${productId}&&quantity=${quantity}`, {}),
+    removeItem: (productId: number, quantity = 1) => requests.delete(`/basket?productId=${productId}&&quantity=${quantity}`),
 }
 
 const TestErrors = {
-    getError400: () => request.get('/buggy/bad-request'),
-    getError401: () => request.get('/buggy/unauthorised'),
-    getError404: () => request.get('/buggy/not-found'),
-    getError500: () => request.get('/buggy/server-error'),
-    getValidationError: () => request.get('/buggy/validation-error'),
+    getError400: () => requests.get('/buggy/bad-request'),
+    getError401: () => requests.get('/buggy/unauthorised'),
+    getError404: () => requests.get('/buggy/not-found'),
+    getError500: () => requests.get('/buggy/server-error'),
+    getValidationError: () => requests.get('/buggy/validation-error'),
 }
 
 const agent = {
     Catalog,
-    TestErrors
+    TestErrors,
+    Basket
 }
 
 
