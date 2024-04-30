@@ -56,7 +56,7 @@ export default function Header({ darkMode, handleThemChange }: Props) {
       >
         <Box display= 'flex' alignItems='center'>
           <Typography variant="h6" component={NavLink} to="/" sx={navStyles}>
-            RE-STORE
+            STORE
           </Typography>
           <Switch checked={darkMode} onChange={handleThemChange} />
         </Box>
